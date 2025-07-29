@@ -3,14 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start": "yarn serve",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
+    "semantic-ui-css": "^2.5.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "yup": "0.31.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",

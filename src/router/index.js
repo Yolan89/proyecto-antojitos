@@ -4,7 +4,7 @@ import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Category from '../views/Category.vue';
 import Cart from '../views/Cart.vue'
-
+import Order from '../views/Orders.vue'
 
 const routes = [
   {
@@ -28,6 +28,11 @@ const routes = [
   name: "Cart",
   component:Cart,
 
+ },
+ {
+path: "/orders",
+name: "Orders",
+component: Orders,
  },
   {
     path:"/:category",

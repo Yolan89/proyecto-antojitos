@@ -115,10 +115,11 @@ export default {
           name: product.name,
           price: product.price,
           quantity: product.quantity,
+          image: product.image.id,
         })),
       };
 
-    //   console.log("Payload a enviar:", data);
+      console.log("Payload a enviar:", data);
 
       try {
         const response = await createOrderApi(data);

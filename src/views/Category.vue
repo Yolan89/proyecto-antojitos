@@ -1,13 +1,14 @@
 <template>
   <BasicLayout>
-   <div class="ui grid">
-    <div class="sixten wide mobile eigth wide tablet four wide computer column"
-       v-for="product in products"
-        :key="product.id">
-
-        <Product :product="product" />
-    </div>
-   </div>
+   <div class="ui grid stackable doubling">
+  <div 
+    v-for="product in products" 
+    :key="product.id" 
+    class="sixteen wide mobile eight wide tablet four wide computer column"
+  >
+    <Product :product="product" />
+  </div>
+</div>
   </BasicLayout>
 </template>
 

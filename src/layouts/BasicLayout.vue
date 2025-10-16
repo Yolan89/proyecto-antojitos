@@ -24,4 +24,17 @@ name:"BasicLayout",
 
 <style>
 
+body{
+  padding:50px;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, span, div, a {
+  font-family: 'Abel', sans-serif !important;
+  font-weight: 400;
+  font-style: normal;
+}
+.ui.grid > .column {
+  padding: 0.5rem !important;
+}
+
 </style>

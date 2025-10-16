@@ -35,8 +35,9 @@
     </table>
 
     <button
-      class="ui button primary fluid"
+      class="ui button fluid"
       @click="createOrder"
+      style="background:#ff0000 "
       v-if="products"
     >
       Generar pedido
@@ -119,7 +120,7 @@ export default {
         })),
       };
 
-      console.log("Payload a enviar:", data);
+    //   console.log("Payload a enviar:", data);
 
       try {
         const response = await createOrderApi(data);
@@ -144,4 +145,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+
+.btn-order{
+ color:#ff0000;
+}
+</style>

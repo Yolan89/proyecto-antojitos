@@ -23,7 +23,7 @@ export default {
     props: {
         product: Object,
     },
-    setup(props) {
+    setup() {
         //  console.log(props.product)
 
         const addProductCart =(idProduct) =>{

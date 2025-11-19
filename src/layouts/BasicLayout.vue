@@ -24,9 +24,9 @@ name:"BasicLayout",
 
 <style>
 
-body{
+/*body{
   padding:50px;
-}
+}*/
 
 body, h1, h2, h3, h4, h5, h6, p, span, div, a {
   font-family: 'Abel', sans-serif !important;

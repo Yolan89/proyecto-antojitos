@@ -2,8 +2,11 @@
     <div class="ui card product">
 
         <div class="image">
-            <img v-if="product.image && product.image.length > 0" :src="API_URL + product.image[0].url"
-                :alt="product.name" />
+            <!-- <img v-if="product.image && product.image.length > 0" :src="API_URL + product.image[0].url"
+                :alt="product.name" /> -->
+                <img v-if="product.imageUrl" :src="product.imageUrl" alt="Producto" class="ui image" />
+<div v-else class="ui placeholder image">Sin imagen</div>
+
         </div>
         <div class="content">
             <div class="header">{{ product.name }}</div>

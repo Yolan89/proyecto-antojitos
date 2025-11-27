@@ -120,7 +120,7 @@ export default {
         })),
       };
 
-    //   console.log("Payload a enviar:", data);
+      console.log("Payload a enviar:", data);
 
       try {
         const response = await createOrderApi(data);

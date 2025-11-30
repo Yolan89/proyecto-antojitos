@@ -27,17 +27,35 @@ export async function createOrderApi(data) {
     }
 }
 
-
 export async function getOrders(idUser) {
-    try{
-        const response = await fetch(
-            `${API_URL}/api/orders?filters[users_permissions_user][id][$eq]=${idUser}&sort=createdAt:desc&populate=*`
+    try {
+        const token = localStorage.getItem('jwt');
+        const url = `${API_URL}/api/orders?filters[users_permissions_user][id][$eq]=${idUser}&sort=createdAt:desc&populate=*`;
 
-        );
-        const result =await response.json();
+        const response = await fetch(url, {
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
+
+        const result = await response.json();
+        console.log('getOrders ->', response.status, result);
         return result;
-    }catch(error){
-     console.log("error al crear la orden",error);
-     return null;
+    } catch (error) {
+        console.log("error al obtener las ordenes", error);
+        return null;
     }
 }
+
+
+// export async function getOrders(idUser) {
+//     try{
+//         const response = await fetch(
+//             `${API_URL}/api/orders?filters[users_permissions_user][id][$eq]=${idUser}&sort=createdAt:desc&populate=*`
+
+//         );
+//         const result =await response.json();
+//         return result;
+//     }catch(error){
+//      console.log("error al crear la orden",error);
+//      return null;
+//     }
+// }

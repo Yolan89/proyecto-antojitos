@@ -88,7 +88,7 @@ export async function getProducts() {
 
 // }
 
-eexport async function getProductsCategory(categorySlug) {
+export async function getProductsCategory(categorySlug) {
   const slug = encodeURIComponent(categorySlug);
   const url = `${API_URL}/api/products?filters[category][slug][$eq]=${slug}&sort=createdAt:desc&populate=image`;
 

@@ -21,44 +21,57 @@
 // }
 
 // src/api/product.js
-import { API_URL } from "@/utils/constants";
+iimport { API_URL } from "@/utils/constants";
 
 export async function getProducts() {
-    const url = `${API_URL}/api/products?sort=createdAt:desc&pagination[limit]=8&populate=image`;
+  const url = `${API_URL}/api/products?sort=createdAt:desc&pagination[limit]=8&populate=image`;
 
-    try {
-        const res = await fetch(url);
-        if (!res.ok) {
-            const body = await res.json().catch(() => ({}));
-            throw new Error(`HTTP ${res.status} - ${body?.error?.message || "Error"}`);
-        }
-        const json = await res.json();
-
-        const products = (json?.data ?? []).map(p => {
-            // v5: image es OBJETO (o null)
-            const img = p?.image || null;
-            const fmts = img?.formats || {};
-            const rel =
-                fmts.small?.url ||        // usa small si existe
-                fmts.thumbnail?.url ||    // o thumbnail
-                img?.url ||               // o el original
-                null;
-
-            return {
-                id: p.id,
-                name: p.name,
-                price: p.price,
-                imageUrl: rel ? `${API_URL}${rel}` : null,  // URL absoluta lista para <img>
-            };
-        });
-
-        return { data: products, meta: json?.meta || {} };
-    } catch (error) {
-        console.error("getProducts error:", error);
-        return { data: [], meta: {}, error };
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(`HTTP ${res.status} - ${body?.error?.message || "Error"}`);
     }
-}
+    const json = await res.json();
 
+    const products = (json?.data ?? []).map((p) => {
+      // ⚠️ En Strapi v5 los campos van dentro de "attributes"
+      const attrs = p?.attributes || {};
+      const imgData = attrs?.image?.data || null;
+      const imgAttr = imgData?.attributes || {};
+      const fmts = imgAttr?.formats || {};
+
+      // URL que trae Strapi (small > thumbnail > original)
+      const rawUrl =
+        fmts.small?.url ||
+        fmts.thumbnail?.url ||
+        imgAttr?.url ||
+        null;
+
+      // ✅ Si ya empieza con http, es Cloudinary (o absoluta) → usar tal cual
+      // ✅ Si es relativa (/uploads/...), la pegamos a API_URL
+      const imageUrl = rawUrl
+        ? rawUrl.startsWith("http")
+          ? rawUrl
+          : `${API_URL}${rawUrl}`
+        : null;
+
+      return {
+        id: p.id,
+        name: attrs.name,
+        price: attrs.price,
+        imageUrl,
+        // por compatibilidad si en algún lado usas product.image
+        image: imageUrl,
+      };
+    });
+
+    return { data: products, meta: json?.meta || {} };
+  } catch (error) {
+    console.error("getProducts error:", error);
+    return { data: [], meta: {}, error };
+  }
+}
 
 // export async function getProductsCategory(categorySlug) {
 //     try {
@@ -75,7 +88,7 @@ export async function getProducts() {
 
 // }
 
-export async function getProductsCategory(categorySlug) {
+eexport async function getProductsCategory(categorySlug) {
   const slug = encodeURIComponent(categorySlug);
   const url = `${API_URL}/api/products?filters[category][slug][$eq]=${slug}&sort=createdAt:desc&populate=image`;
 
@@ -89,20 +102,31 @@ export async function getProductsCategory(categorySlug) {
     const json = await res.json();
 
     const data = (json?.data ?? []).map((p) => {
-      // v5: image es OBJETO (no array)
-      const img  = p?.image || null;
-      const fmts = img?.formats || {};
-      const rel  = fmts.small?.url || fmts.thumbnail?.url || img?.url || null;
+      const attrs = p?.attributes || {};
+      const imgData = attrs?.image?.data || null;
+      const imgAttr = imgData?.attributes || {};
+      const fmts = imgAttr?.formats || {};
+
+      const rawUrl =
+        fmts.small?.url ||
+        fmts.thumbnail?.url ||
+        imgAttr?.url ||
+        null;
+
+      const imageUrl = rawUrl
+        ? rawUrl.startsWith("http")
+          ? rawUrl
+          : `${API_URL}${rawUrl}`
+        : null;
 
       return {
         id: p.id,
-        name: p.name,
-        price: p.price,
-        slug: p.slug,            // si luego agregas UID
-        imageUrl: rel ? `${API_URL}${rel}` : null,
-        // por si tu Product.vue todavía usa 'image':
-        image: img || null,
-        category: p?.category || null,
+        name: attrs.name,
+        price: attrs.price,
+        slug: attrs.slug,
+        imageUrl,
+        image: imageUrl,
+        category: attrs.category || null,
       };
     });
 

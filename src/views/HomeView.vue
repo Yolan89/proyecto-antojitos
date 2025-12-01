@@ -5,7 +5,7 @@
       <h1>Antojitos Ofe</h1>
     </div>
 
-    <h2>Ultimos Productos</h2>
+    <h2>Últimos Productos</h2>
     <div class="ui grid">
       <!-- responsibe se realiza con los estilos de sematic -->
       <div

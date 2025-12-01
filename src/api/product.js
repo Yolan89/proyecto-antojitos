@@ -21,7 +21,7 @@
 // }
 
 // src/api/product.js
-iimport { API_URL } from "@/utils/constants";
+import { API_URL } from "@/utils/constants";
 
 export async function getProducts() {
   const url = `${API_URL}/api/products?sort=createdAt:desc&pagination[limit]=8&populate=image`;

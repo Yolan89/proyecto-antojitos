@@ -60,8 +60,8 @@ export default {
       const token = getTokenApi();
       const { id } = jwtDecode(token);
       const response = await getOrders(id);
-      console.log(response);
-      console.log(token);
+      // console.log(response);
+      // console.log(token);
 
       orders.value = response.data
 

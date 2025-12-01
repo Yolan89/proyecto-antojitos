@@ -18,7 +18,9 @@ export async function createOrderApi(data) {
 
         const response = await fetch(url, params);
         const result = await response.json();
-        return result;
+        // return result;
+        console.log(response);
+        
 
     } catch (error) {
         console.log('error al crear la orden', error);

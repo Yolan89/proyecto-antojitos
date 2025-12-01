@@ -1,7 +1,8 @@
 <template>
   <BasicLayout>
     <h1>Mis pedidos</h1>
-    <h3 v-if="!orders">No tienes pedidos</h3>
+    <!-- <h3 v-if="!orders">No tienes pedidos</h3> -->
+     <h3 v-if="orders.length === 0">No tienes pedidos</h3>
 
     <template v-if="orders">
       <div class="order" v-for="order in orders" :key="order.id">

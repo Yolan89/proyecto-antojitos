@@ -50,7 +50,7 @@ setup(){
         const response =await getCategoriesApi();
         if (Array.isArray(response.data)) {
           categories.value = response.data;
-          console.log(response);
+        //   console.log(response);
           
         } else {
           console.log("No es un arreglo");

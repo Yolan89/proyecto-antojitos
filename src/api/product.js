@@ -20,45 +20,92 @@
 
 // }
 
-// src/api/product.js
+
+// // src/api/product.js
+// import { API_URL } from "@/utils/constants";
+
+// export async function getProducts() {
+//     const url = `${API_URL}/api/products?sort=createdAt:desc&pagination[limit]=8&populate=image`;
+
+//     try {
+//         const res = await fetch(url);
+//         if (!res.ok) {
+//             const body = await res.json().catch(() => ({}));
+//             throw new Error(`HTTP ${res.status} - ${body?.error?.message || "Error"}`);
+//         }
+//         const json = await res.json();
+
+//         const products = (json?.data ?? []).map(p => {
+//             // v5: image es OBJETO (o null)
+//             const img = p?.image || null;
+//             const fmts = img?.formats || {};
+//             const rel =
+//                 fmts.small?.url ||        // usa small si existe
+//                 fmts.thumbnail?.url ||    // o thumbnail
+//                 img?.url ||               // o el original
+//                 null;
+
+//             return {
+//                 id: p.id,
+//                 name: p.name,
+//                 price: p.price,
+//                 imageUrl: rel ? `${API_URL}${rel}` : null,  // URL absoluta lista para <img>
+//             };
+//         });
+
+//         return { data: products, meta: json?.meta || {} };
+//     } catch (error) {
+//         console.error("getProducts error:", error);
+//         return { data: [], meta: {}, error };
+//     }
+// }
+
 import { API_URL } from "@/utils/constants";
 
-export async function getProducts() {
-    const url = `${API_URL}/api/products?sort=createdAt:desc&pagination[limit]=8&populate=image`;
-
-    try {
-        const res = await fetch(url);
-        if (!res.ok) {
-            const body = await res.json().catch(() => ({}));
-            throw new Error(`HTTP ${res.status} - ${body?.error?.message || "Error"}`);
-        }
-        const json = await res.json();
-
-        const products = (json?.data ?? []).map(p => {
-            // v5: image es OBJETO (o null)
-            const img = p?.image || null;
-            const fmts = img?.formats || {};
-            const rel =
-                fmts.small?.url ||        // usa small si existe
-                fmts.thumbnail?.url ||    // o thumbnail
-                img?.url ||               // o el original
-                null;
-
-            return {
-                id: p.id,
-                name: p.name,
-                price: p.price,
-                imageUrl: rel ? `${API_URL}${rel}` : null,  // URL absoluta lista para <img>
-            };
-        });
-
-        return { data: products, meta: json?.meta || {} };
-    } catch (error) {
-        console.error("getProducts error:", error);
-        return { data: [], meta: {}, error };
-    }
+function buildImageUrl(rel) {
+  if (!rel) return null;
+  // Si ya viene de Cloudinary (o cualquier URL absoluta), la dejamos tal cual
+  if (rel.startsWith("http://") || rel.startsWith("https://")) {
+    return rel;
+  }
+  // Si es una ruta relativa (/uploads/...), le pegamos el API_URL
+  return `${API_URL}${rel}`;
 }
 
+export async function getProducts() {
+  const url = `${API_URL}/api/products?sort=createdAt:desc&pagination[limit]=8&populate=image`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(`HTTP ${res.status} - ${body?.error?.message || "Error"}`);
+    }
+    const json = await res.json();
+
+    const products = (json?.data ?? []).map((p) => {
+      const img = p?.image || null;
+      const fmts = img?.formats || {};
+      const rel =
+        fmts.small?.url ||
+        fmts.thumbnail?.url ||
+        img?.url ||
+        null;
+
+      return {
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        imageUrl: buildImageUrl(rel),
+      };
+    });
+
+    return { data: products, meta: json?.meta || {} };
+  } catch (error) {
+    console.error("getProducts error:", error);
+    return { data: [], meta: {}, error };
+  }
+}
 
 // export async function getProductsCategory(categorySlug) {
 //     try {
@@ -90,9 +137,9 @@ export async function getProductsCategory(categorySlug) {
 
     const data = (json?.data ?? []).map((p) => {
       // v5: image es OBJETO (no array)
-      const img  = p?.image || null;
+      const img = p?.image || null;
       const fmts = img?.formats || {};
-      const rel  = fmts.small?.url || fmts.thumbnail?.url || img?.url || null;
+      const rel = fmts.small?.url || fmts.thumbnail?.url || img?.url || null;
 
       return {
         id: p.id,

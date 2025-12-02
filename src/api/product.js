@@ -92,11 +92,20 @@ export async function getProducts() {
         img?.url ||
         null;
 
+      const absolute = !rel
+        ? null
+        : rel.startsWith("http")
+          ? rel
+          : `${API_URL}${rel}`;
+
+
+
       return {
         id: p.id,
         name: p.name,
         price: p.price,
-        imageUrl: buildImageUrl(rel),
+        imageUrl: absolute,
+        image: absolute,
       };
     });
 
@@ -141,14 +150,19 @@ export async function getProductsCategory(categorySlug) {
       const fmts = img?.formats || {};
       const rel = fmts.small?.url || fmts.thumbnail?.url || img?.url || null;
 
+      const absolute = !rel
+        ? null
+        : rel.startsWith("http")
+          ? rel
+          : `${API_URL}${rel}`;
+
       return {
         id: p.id,
         name: p.name,
         price: p.price,
         slug: p.slug,            // si luego agregas UID
-        imageUrl: rel ? `${API_URL}${rel}` : null,
-        // por si tu Product.vue todavía usa 'image':
-        image: img || null,
+        imageUrl: absolute,
+        image: absolute,
         category: p?.category || null,
       };
     });
